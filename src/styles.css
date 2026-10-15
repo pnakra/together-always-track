@@ -144,3 +144,12 @@
     color: var(--color-foreground);
   }
 }
+
+@layer base {
+  body {
+    font-family: "Nunito", ui-rounded, system-ui, sans-serif;
+  }
+  h1, h2, h3 {
+    font-family: "Fredoka", "Nunito", ui-rounded, sans-serif;
+  }
+}
