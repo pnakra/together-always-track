@@ -62,26 +62,28 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --radius: 1.25rem;
+  --background: oklch(0.985 0.012 60);
+  --foreground: oklch(0.29 0.035 30);
+  --card: oklch(1 0.005 60);
+  --card-foreground: oklch(0.29 0.035 30);
+  --popover: oklch(1 0.005 60);
+  --popover-foreground: oklch(0.29 0.035 30);
+  --primary: oklch(0.69 0.158 27);
+  --primary-foreground: oklch(0.99 0.01 60);
+  --secondary: oklch(0.95 0.025 55);
+  --secondary-foreground: oklch(0.38 0.06 30);
+  --muted: oklch(0.955 0.018 65);
+  --muted-foreground: oklch(0.55 0.035 40);
+  --accent: oklch(0.93 0.045 45);
+  --accent-foreground: oklch(0.36 0.07 30);
+
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.9 0.025 50);
+  --input: oklch(0.9 0.025 50);
+  --ring: oklch(0.69 0.158 27);
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -140,5 +142,14 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+}
+
+@layer base {
+  body {
+    font-family: "Nunito", ui-rounded, system-ui, sans-serif;
+  }
+  h1, h2, h3 {
+    font-family: "Fredoka", "Nunito", ui-rounded, sans-serif;
   }
 }
