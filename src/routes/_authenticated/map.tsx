@@ -7,10 +7,10 @@ import { coupleQuery, nameOf } from "@/lib/couple";
 export const Route = createFileRoute("/_authenticated/map")({
   head: () => ({
     meta: [
-      { title: "Right now | Together" },
-      { name: "description", content: "Your partner's approximate location, only while they share it." },
-      { property: "og:title", content: "Right now | Together" },
-      { property: "og:description", content: "Your partner's approximate location, only while they share it." },
+      { title: "Map | Together" },
+      { name: "description", content: "Where your partner has been this week." },
+      { property: "og:title", content: "Map | Together" },
+      { property: "og:description", content: "Where your partner has been this week." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -20,42 +20,51 @@ export const Route = createFileRoute("/_authenticated/map")({
 
 function MapPage() {
   const { data } = useQuery(coupleQuery);
-  const paired = !!data?.couple;
+  const partnerId = data?.partner?.id ?? null;
 
-  const current = useQuery({
-    queryKey: ["partner-location"],
-    enabled: paired,
-    refetchInterval: 30000,
+  const points = useQuery({
+    queryKey: ["points", partnerId],
+    enabled: !!partnerId,
     queryFn: async () => {
-      const { data: rows, error } = await supabase.rpc("get_partner_current_location");
+      const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const { data: rows, error } = await supabase
+        .from("location_points")
+        .select("id, lat, lng, recorded_at")
+        .eq("user_id", partnerId!)
+        .gte("recorded_at", since)
+        .order("recorded_at", { ascending: false });
       if (error) throw error;
-      return rows?.[0] ?? null;
+      return rows;
     },
   });
 
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border bg-card p-6 shadow-sm">
-        <h1 className="text-lg font-semibold">Right now</h1>
-        {!paired ? (
-          <p className="mt-2 text-sm text-muted-foreground">Pair up to see this.</p>
-        ) : current.data ? (
-          <div className="mt-4 rounded-2xl bg-secondary px-4 py-3 text-sm">
-            <p>
-              {nameOf(data.partner)} is around{" "}
-              <span className="font-mono">
-                {current.data.lat.toFixed(2)}, {current.data.lng.toFixed(2)}
-              </span>
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Approximate, updated {new Date(current.data.recorded_at).toLocaleTimeString()}
-            </p>
-          </div>
-        ) : (
-          <p className="mt-2 text-sm text-muted-foreground">
-            {current.isLoading ? "Loading…" : `${nameOf(data.partner)} isn't sharing their location right now.`}
-          </p>
-        )}
+        <h1 className="text-lg font-semibold">Where they've been this week</h1>
+        <p className="text-sm text-muted-foreground">
+          {data?.partner ? `${nameOf(data.partner)}'s last 7 days.` : "Pair up to see this."}
+        </p>
+
+        <ul className="mt-4 space-y-2" data-testid="point-list">
+          {points.data?.length ? (
+            points.data.map((p) => (
+              <li
+                key={p.id}
+                className="flex items-center justify-between rounded-2xl bg-secondary px-4 py-3 text-sm"
+              >
+                <span>{new Date(p.recorded_at).toLocaleString()}</span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {p.lat.toFixed(4)}, {p.lng.toFixed(4)}
+                </span>
+              </li>
+            ))
+          ) : (
+            <li className="text-sm text-muted-foreground">
+              {points.isLoading ? "Loading…" : "No places recorded this week."}
+            </li>
+          )}
+        </ul>
       </section>
     </main>
   );

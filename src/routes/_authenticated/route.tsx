@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, Link, redirect, useNavigate } from "@tanstack/
 import { Heart, MapPin, Users } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { LocationRecorder } from "@/components/LocationRecorder";
 import { DemoFooter } from "@/components/DemoFooter";
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +20,8 @@ function AuthenticatedLayout() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-24 pt-8">
+      <LocationRecorder />
+
       <header className="mb-6 flex items-center justify-between">
         <Link to="/home" className="text-xl font-semibold tracking-tight">
           💞 Together

@@ -8,27 +8,6 @@
       "when": 1792087618153,
       "tag": "0000_together_schema_snapshot",
       "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1792128228123,
-      "tag": "0001_privacy_hardening",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1792128324779,
-      "tag": "0002_reject_stale_points",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1792145144205,
-      "tag": "0003_restore_flawed_demo",
-      "breakpoints": true
     }
   ]
 }
