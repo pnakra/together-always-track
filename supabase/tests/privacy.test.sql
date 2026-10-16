@@ -7,10 +7,6 @@ create temp table t_ids as
          (select id from public.profiles where email = 'sam.test@together-demo.app') as sam;
 grant select on t_ids to authenticated;
 
--- Stranger account (no couple).
-insert into auth.users (id, email, raw_user_meta_data, aud, role)
-  values ('00000000-0000-0000-0000-00000000beef', 'stranger.test@together-demo.app',
-          '{"display_name":"Stranger"}', 'authenticated', 'authenticated');
 
 create or replace function pg_temp.as_user(_id uuid) returns void language sql as $$
   select set_config('request.jwt.claims', json_build_object('sub', _id, 'role', 'authenticated')::text, true),
@@ -21,9 +17,10 @@ create or replace function pg_temp.as_admin() returns void language sql as $$
 $$;
 
 do $$
-declare a uuid; s uuid; x uuid := '00000000-0000-0000-0000-00000000beef'; n int; r record; inv uuid;
+declare a uuid; s uuid; x uuid; n int; r record; inv uuid;
 begin
   select alex, sam into a, s from t_ids;
+  select id into x from public.profiles where email = 'stranger.test@together-demo.app'; -- unpaired test account
 
   -- 1. Unauthorized field reads
   perform pg_temp.as_user(a);
