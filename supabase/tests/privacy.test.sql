@@ -1,5 +1,6 @@
--- Privacy rule tests. Run: psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/privacy.test.sql
--- Everything runs in one transaction and is rolled back.
+-- Privacy rule tests. Run as a database superuser via the backend SQL runner.
+-- Success ends with the error "ALL PRIVACY TESTS PASSED (rolled back)"; any "FAIL:" message is a failure.
+-- The final raise aborts the transaction, so nothing is persisted.
 begin;
 
 create temp table t_ids as
@@ -148,6 +149,7 @@ begin
   if exists (select 1 from public.get_partner_current_location()) then
     raise exception 'FAIL: location visible after unlink'; end if;
   raise notice 'PASS immediate revocation';
+  raise exception 'ALL PRIVACY TESTS PASSED (rolled back)';
 end $$;
 
 rollback;
