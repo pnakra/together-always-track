@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Profile = { id: string; email: string; display_name: string | null };
+export type Profile = { id: string; email: string | null; display_name: string | null };
 
 export type CoupleInfo = {
   me: Profile;
@@ -33,17 +33,13 @@ export const coupleQuery = queryOptions({
 
     let partner: Profile | null = null;
     if (couple) {
-      const partnerId = couple.user_a === uid ? couple.user_b : couple.user_a;
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, email, display_name")
-        .eq("id", partnerId)
-        .maybeSingle();
-      partner = data;
+      // Partner fields are only returned if the partner opted in to share them.
+      const { data } = await supabase.rpc("get_partner_profile");
+      partner = data?.[0] ?? null;
     }
     return { me, couple, partner };
   },
 });
 
 export const nameOf = (p: Profile | null | undefined) =>
-  p?.display_name || p?.email.split("@")[0] || "";
+  p?.display_name || p?.email?.split("@")[0] || (p ? "Your partner" : "");
