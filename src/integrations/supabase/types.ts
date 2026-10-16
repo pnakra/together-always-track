@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      couple_invitations: {
+        Row: {
+          created_at: string
+          id: string
+          invitee: string
+          inviter: string
+          responded_at: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invitee: string
+          inviter: string
+          responded_at?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invitee?: string
+          inviter?: string
+          responded_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       couples: {
         Row: {
           created_at: string
@@ -109,6 +136,35 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_field_permissions: {
+        Row: {
+          share_display_name: boolean
+          share_email: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          share_display_name?: boolean
+          share_email?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          share_display_name?: boolean
+          share_email?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_field_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -136,6 +192,37 @@ export type Database = {
     }
     Functions: {
       are_partners: { Args: { _a: string; _b: string }; Returns: boolean }
+      cancel_couple_invitation: { Args: { _id: string }; Returns: undefined }
+      cleanup_expired_location_points: { Args: never; Returns: undefined }
+      get_partner_current_location: {
+        Args: never
+        Returns: {
+          lat: number
+          lng: number
+          recorded_at: string
+        }[]
+      }
+      get_partner_profile: {
+        Args: never
+        Returns: {
+          display_name: string
+          email: string
+          id: string
+        }[]
+      }
+      list_incoming_invitations: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          inviter_name: string
+        }[]
+      }
+      respond_couple_invitation: {
+        Args: { _accept: boolean; _id: string }
+        Returns: undefined
+      }
+      send_couple_invitation: { Args: { _email: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
