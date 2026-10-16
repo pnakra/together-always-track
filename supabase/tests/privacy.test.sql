@@ -106,6 +106,13 @@ begin
   delete from public.location_points where user_id = s;
   if exists (select 1 from public.location_points where user_id = s) then
     raise exception 'FAIL: owner cannot clear history'; end if;
+  perform pg_temp.as_user(s);
+  begin
+    insert into public.location_points (user_id, lat, lng, recorded_at) values (s, 1, 1, now() - interval '10 minutes');
+    raise exception 'FAIL: stale point accepted';
+  exception when raise_exception then
+    if sqlerrm like 'FAIL%' then raise; end if;
+  end;
   raise notice 'PASS history access';
 
   -- 5. Retention cleanup
