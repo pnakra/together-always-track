@@ -192,37 +192,6 @@ export type Database = {
     }
     Functions: {
       are_partners: { Args: { _a: string; _b: string }; Returns: boolean }
-      cancel_couple_invitation: { Args: { _id: string }; Returns: undefined }
-      cleanup_expired_location_points: { Args: never; Returns: undefined }
-      get_partner_current_location: {
-        Args: never
-        Returns: {
-          lat: number
-          lng: number
-          recorded_at: string
-        }[]
-      }
-      get_partner_profile: {
-        Args: never
-        Returns: {
-          display_name: string
-          email: string
-          id: string
-        }[]
-      }
-      list_incoming_invitations: {
-        Args: never
-        Returns: {
-          created_at: string
-          id: string
-          inviter_name: string
-        }[]
-      }
-      respond_couple_invitation: {
-        Args: { _accept: boolean; _id: string }
-        Returns: undefined
-      }
-      send_couple_invitation: { Args: { _email: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
