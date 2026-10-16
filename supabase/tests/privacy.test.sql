@@ -44,7 +44,6 @@ begin
   perform pg_temp.as_user(x);
   if exists (select 1 from public.get_partner_profile()) then
     raise exception 'FAIL: stranger sees a partner'; end if;
-  ras: null;
   raise notice 'PASS unauthorized field reads';
 
   -- 2. Unaccepted invitations do not create partnership
@@ -57,7 +56,6 @@ begin
   if exists (select 1 from public.couples where x in (user_a, user_b)) then
     raise exception 'FAIL: invitation alone created couple'; end if;
   perform pg_temp.as_user(a);
-  if exists (select 1 from public.get_partner_current_location()) then null; end if;
   select id into inv from public.list_incoming_invitations() limit 1;
   if inv is null then raise exception 'FAIL: invitee cannot see invitation'; end if;
   perform pg_temp.as_user(x);
